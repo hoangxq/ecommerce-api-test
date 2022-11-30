@@ -1,6 +1,10 @@
 package com.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -9,6 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 @Table(name = "products")
+@Where(clause = "is_deleted=0")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +26,10 @@ public class Product {
     private Double price;
     @Column(name = "description")
     private String description;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinTable(
             name = "category_product",
             joinColumns = @JoinColumn(name = "product_id"),
@@ -33,4 +41,6 @@ public class Product {
     @OneToOne
     @JoinColumn(name = "thumbnail_id")
     private ImageModel thumbnail;
+    @Column(name = "is_deleted")
+    private boolean isDeleted = false;
 }

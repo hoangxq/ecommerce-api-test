@@ -83,9 +83,7 @@ public class AuthServiceImpl implements AuthService {
                     () -> new EntityNotFoundException(Authority.class.getName(), authority)
             )));
         }
-
         account.setAuthorities(authorities);
-
         accountRepository.save(account);
     }
 
