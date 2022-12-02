@@ -1,5 +1,6 @@
 package com.demo.service;
 
+import com.demo.web.dto.request.CategoryRequest;
 import com.demo.web.dto.request.ProductRequest;
 import com.demo.web.dto.response.ProductResponse;
 
@@ -11,4 +12,5 @@ public interface ProductService {
     ProductResponse createProduct(ProductRequest productRequest);
     ProductResponse updateProduct(ProductRequest productSource, Long id);
     void deleteProduct(Long id);
+    List<ProductResponse> getProductByCategory(String categoryName);
 }

@@ -1,6 +1,7 @@
 package com.demo.web.rest;
 
 import com.demo.service.ProductService;
+import com.demo.web.dto.request.CategoryRequest;
 import com.demo.web.dto.request.ProductRequest;
 import com.demo.web.dto.response.utils.Response;
 import com.demo.web.dto.response.utils.ResponseUtils;
@@ -40,5 +41,10 @@ public class ProductResource {
     public ResponseEntity<Response> deleteProduct (@PathVariable Long id){
         productService.deleteProduct(id);
         return ResponseUtils.ok("Deleted");
+    }
+
+    @GetMapping("/category/{categoryName}")
+    public ResponseEntity<Response> getProductByCategory(@PathVariable String categoryName){
+        return ResponseUtils.ok(productService.getProductByCategory(categoryName));
     }
 }

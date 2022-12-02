@@ -6,6 +6,7 @@ import com.demo.repository.CategoryRepository;
 import com.demo.repository.ProductRepository;
 import com.demo.service.ProductService;
 import com.demo.service.utils.MappingHelper;
+import com.demo.web.dto.request.CategoryRequest;
 import com.demo.web.dto.request.ProductRequest;
 import com.demo.web.dto.response.ProductResponse;
 import com.demo.web.exception.EntityNotFoundException;
@@ -59,12 +60,24 @@ public class ProductServiceImpl implements ProductService {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Product.class.getName(), id.toString()));
         mappingHelper.mapIfSourceNotNullAndStringNotBlank(productSource, product);
+        var categories = productSource.getCategories().stream()
+                .map(e -> getCategoryByName(e)).collect(Collectors.toSet());
+        product.setCategories(categories);
         return productMapper(productRepository.save(product));
     }
 
     @Override
     public void deleteProduct(Long id) {
         productRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ProductResponse> getProductByCategory(String categoryName) {
+        var category = categoryRepository.findOneWithProductsByName(categoryName)
+                .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), categoryName));
+        return category.getProducts().stream()
+                .map(e -> productMapper(e))
+                .collect(Collectors.toList());
     }
 
     private Category getCategoryByName(String name) {

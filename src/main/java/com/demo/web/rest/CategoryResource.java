@@ -30,4 +30,16 @@ public class CategoryResource {
     public ResponseEntity<Response> createCategory (@RequestBody CategoryRequest categoryReq){
         return ResponseUtils.created(categoryService.createCategory(categoryReq));
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Response> updateCategory(@PathVariable Long id,
+                                                   @RequestBody CategoryRequest categoryReq){
+        return ResponseUtils.ok("updated", categoryService.updateCategory(categoryReq, id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Response> deleteCategory(@PathVariable Long id){
+        categoryService.deleteCategoryById(id);
+        return ResponseUtils.ok("deleted");
+    }
 }

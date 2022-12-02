@@ -2,8 +2,10 @@ package com.demo.service.impl;
 
 import com.demo.model.Account;
 import com.demo.model.Authority;
+import com.demo.model.Cart;
 import com.demo.repository.AuthorityRepository;
 import com.demo.repository.AccountRepository;
+import com.demo.repository.CartRepository;
 import com.demo.service.AuthService;
 import com.demo.web.dto.request.LoginRequest;
 import com.demo.web.dto.request.SignupRequest;
@@ -34,6 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     private final AccountRepository accountRepository;
     private final AuthorityRepository authorityRepository;
+    private final CartRepository cartRepository;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
     private final PasswordEncoder passwordEncoder;
@@ -85,6 +88,9 @@ public class AuthServiceImpl implements AuthService {
         }
         account.setAuthorities(authorities);
         accountRepository.save(account);
+        var cart = new Cart(); cart.setAccount(account);
+        cart.setDescription("None");
+        cartRepository.save(cart);
     }
 
     @Override

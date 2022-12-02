@@ -3,6 +3,7 @@ package com.demo.service.impl;
 import com.demo.model.Category;
 import com.demo.repository.CategoryRepository;
 import com.demo.service.CategoryService;
+import com.demo.service.utils.MappingHelper;
 import com.demo.web.dto.request.CategoryRequest;
 import com.demo.web.dto.response.CategoryResponse;
 import com.demo.web.exception.EntityNotFoundException;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final MappingHelper mappingHelper;
 
     @Override
     public List<CategoryResponse> getAllCategory() {
@@ -47,7 +49,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryResponse updateCategory(CategoryRequest categoryRequest, Long id) {
         var category = categoryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(Category.class.getName(), id.toString()));
-        modelMapper.map(categoryRequest, category);
+        mappingHelper.mapIfSourceNotNullAndStringNotBlank(categoryRequest, category);
         return modelMapper.map(categoryRepository.save(category), CategoryResponse.class);
     }
 
