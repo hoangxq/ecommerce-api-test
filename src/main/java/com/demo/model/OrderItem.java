@@ -1,6 +1,9 @@
 package com.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 
@@ -14,6 +17,9 @@ public class OrderItem {
     @Column(name = "quantity")
     private Long quantity;
     @ManyToOne
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinColumn(name = "order_id")
     private Order order;
     @ManyToOne

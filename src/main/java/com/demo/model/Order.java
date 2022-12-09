@@ -1,6 +1,9 @@
 package com.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -25,8 +28,13 @@ public class Order {
     @Column(name = "total_price")
     private Double totalPrice;
     @Column(name = "is_delete")
-    private boolean isDelete;
+    private boolean isDelete = false;
+    @Column(name = "status")
+    private String status;
     @ManyToOne
+    @JsonIgnore
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinColumn(name = "account_id")
     private Account account;
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
