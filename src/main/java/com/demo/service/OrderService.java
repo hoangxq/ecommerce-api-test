@@ -9,7 +9,6 @@ import java.util.List;
 public interface OrderService {
     List<OrderResponse> getAllOrderOfUser(Long userId);
     OrderResponse createOrder (Long userId, OrderRequest orderRequest);
-    OrderResponse updateOrderIsPending (Long orderId, OrderRequest source);
-    OrderResponse cancelOrderIsPending (Long orderId);
+    OrderResponse updateOrder (Long orderId, OrderRequest source);
     List<OrderItemResponse> getOrderItemOfOrder (Long orderId);
 }

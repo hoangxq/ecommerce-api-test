@@ -27,17 +27,12 @@ public class OrderResource {
     }
 
     @PutMapping("/{orderId}")
-    public ResponseEntity<Response> updateOrderIsPending (@PathVariable Long orderId){
-        return null;
-    }
-
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Response> cancelOrderIsPending (@PathVariable Long orderId){
-        return null;
+    public ResponseEntity<Response> updateOrder (@PathVariable Long orderId, @RequestBody OrderRequest source){
+        return ResponseUtils.ok(orderService.updateOrder(orderId, source));
     }
 
     @GetMapping("/order-item/{orderId}")
     public ResponseEntity<Response> getOrderItemOfOrder(@PathVariable Long orderId){
-        return null;
+        return ResponseUtils.ok(orderService.getOrderItemOfOrder(orderId));
     }
 }

@@ -12,5 +12,6 @@ public class OrderRequest {
     private String receiverName;
     private String receiverPhone;
     private Date timeOrder;
+    private String status;
     private Set<Long> cartItemIds = new HashSet<>();
 }

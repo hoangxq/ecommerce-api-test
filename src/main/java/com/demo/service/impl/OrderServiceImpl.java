@@ -5,9 +5,7 @@ import com.demo.repository.*;
 import com.demo.service.OrderService;
 import com.demo.service.utils.MappingHelper;
 import com.demo.web.dto.request.OrderRequest;
-import com.demo.web.dto.response.AccountResponse;
-import com.demo.web.dto.response.OrderItemResponse;
-import com.demo.web.dto.response.OrderResponse;
+import com.demo.web.dto.response.*;
 import com.demo.web.exception.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -76,17 +74,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse updateOrderIsPending(Long orderId, OrderRequest source) {
-        return null;
-    }
-
-    @Override
-    public OrderResponse cancelOrderIsPending(Long orderId) {
-        return null;
+    public OrderResponse updateOrder(Long orderId, OrderRequest source) {
+        var order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new EntityNotFoundException(Order.class.getName(), orderId.toString()));
+        source.setStatus(source.getStatus().equalsIgnoreCase(OrderStatusConstants.CANCELED) &&
+                order.getStatus().equalsIgnoreCase(OrderStatusConstants.PENDING) ?
+                OrderStatusConstants.CANCELED : order.getStatus());
+        mappingHelper.mapIfSourceNotNullAndStringNotBlank(source, order);
+        return modelMapper.map(orderRepository.save(order), OrderResponse.class);
     }
 
     @Override
     public List<OrderItemResponse> getOrderItemOfOrder(Long orderId) {
-        return null;
+        return orderItemRepository.findByOrder_Id(orderId).stream()
+                .map(e -> {
+                    var item = modelMapper.map(e, OrderItemResponse.class);
+                    item.setProductResponse(modelMapper.map(e.getProduct(), ProductResponse.class));
+                    item.getProductResponse()
+                            .setCategoryRes(e.getProduct().getCategories().stream()
+                                    .map(i -> i.getName()).collect(Collectors.toSet()));
+                    item.setTotalPrice(e.getQuantity()*e.getProduct().getPrice());
+                    return item;
+                }).collect(Collectors.toList());
     }
 }
